@@ -1,0 +1,42 @@
+{
+  "environment": {
+    "tile_size": 10,
+    "width": 1200,
+    "height": 600,
+    "defaults": {
+      "0": { "obstacles": [], "robot": [] },
+      "1": { "obstacles": [[490, 10, 300, 320], [10, 330, 210, 260]], "robot": [700, 520, 30] },
+      "2": { "obstacles": [[360, 10, 80, 460]], "robot": [730, 500, 30], "name":"narrow passage" },
+      "3": { "obstacles": [[233, 10, 157, 247], [503, 493, 137, 97]], "robot": [699, 512, 30] },
+      "4": { "obstacles": [[389, 296, 401, 294]], "robot": [28, 511, 30] },
+      "5": { "obstacles": [[10, 10, 365, 95], [380, 252, 410, 337], [381, 220, 23, 41]], "robot": [29, 503, 30], "name":"hummerkorb-falle" },
+      "6": { "obstacles": [[361, 10, 76, 462]], "robot": [580, 270, 30], "name":"narrow passage" },
+      "7": { "obstacles": [[10, 420, 447, 170], [10, 10, 165, 43], [611, 10, 179, 58], [10, 252, 86, 171]], "name":"normal room" },
+      "8": { "obstacles": [[10, 420, 447, 170], [10, 10, 165, 43], [611, 10, 179, 58], [10, 252, 86, 171]], "robot": [730, 501, 30], "name":"normal room" },
+      "9": { "obstacles": [], "robot": [385, 285, 30], "name":"random spiral" }
+    }
+  },
+  "robot":{
+    "radius": 30,
+    "wss": 2,
+    "rss": 5,
+    "dirt_per_cover": 10
+  },
+  "simulation": {
+    "fps": 500,
+    "default_algorithm": "random",
+    "ticks_for_cover": 10,
+    "dirt": 50,
+    "stop_at_coverage": 85,
+    "ticks_per_screenshot": 1000,
+    "ticks_per_save": 500
+  },
+  "debug": {
+    "draw_fps": true,
+    "draw_time": true,
+    "draw_coverage": true
+  },
+  "logging": {
+    "verbose": true
+  }
+}
