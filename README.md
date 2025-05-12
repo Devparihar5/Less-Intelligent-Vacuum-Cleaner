@@ -1,8 +1,8 @@
-# Intelligent Vacuum Cleaner with AI Algorithms
+# Less Intelligent Vacuum Cleaner
 
 A simulation of a vacuum cleaning robot with various AI algorithms for path planning and coverage optimization. This project features a modern web interface built with Flask and Socket.IO, as well as a traditional command-line interface using Pygame.
 
-![Intelligent Vacuum Cleaner](https://github.com/devparihar5/Intelligent-Vacuum-Cleaner-with-AI-Algorithms/raw/main/screenshots/demo.png)
+![Intelligent Vacuum Cleaner](https://github.com/devparihar5/Less-Intelligent-Vacuum-Cleaner/raw/main/screenshots/demo.png)
 
 ## Features
 
@@ -42,8 +42,8 @@ A simulation of a vacuum cleaning robot with various AI algorithms for path plan
 
 ```bash
 # Clone the repository
-git clone https://github.com/devparihar5/Intelligent-Vacuum-Cleaner-with-AI-Algorithms.git
-cd Intelligent-Vacuum-Cleaner-with-AI-Algorithms
+git clone https://github.com/devparihar5/Less-Intelligent-Vacuum-Cleaner.git
+cd Less-Intelligent-Vacuum-Cleaner
 
 # Install dependencies
 pip install -r requirements.txt
@@ -82,22 +82,6 @@ http://localhost:5000
      * Time elapsed (formatted as HH:MM:SS)
    - Stop the simulation at any time with the "Stop Simulation" button
 
-### Command Line Interface
-
-For advanced users or scripting purposes, you can use the command line interface:
-
-```bash
-python VacuumCleanerSim.py [<algorithm>] [<environment>]
-```
-
-#### Command Line Controls
-
-- `R` - Places the robot at the position of your mouse cursor
-- `M` - Switches to simulation mode (requires a robot to be placed)
-- `P` - Toggles display of the coverage path
-- `C` - Clears all obstacles
-- `ESC` - Exits the software
-
 ## Configuration
 
 The simulation is highly configurable through the `config_manager.py` file:
@@ -110,7 +94,6 @@ The simulation is highly configurable through the `config_manager.py` file:
 ## Project Structure
 
 - `app.py` - Web interface and server using Flask and Socket.IO
-- `VacuumCleanerSim.py` - Command line interface using Pygame
 - `RoomEnvironment.py` - Environment simulation and physics
 - `Visualizer.py` - Rendering and visualization components
 - `algorithm/` - AI algorithms for robot movement:
