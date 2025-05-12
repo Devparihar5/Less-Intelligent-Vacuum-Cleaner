@@ -3,13 +3,14 @@
 #
 #  This file provides utilities like
 #  logging and configuration options.
+#  It now uses the config_manager singleton instead of a JSON file.
 #
 
-import json
-from os import path
 import logging
+from utils.config_manager import config_manager
 
-CONF = None
+# For backward compatibility, provide CONF as a reference to config_manager
+CONF = config_manager.get_config()
 LOG = None
 
 
@@ -18,23 +19,14 @@ LOG = None
 #
 def init_config():
     """
-    Loads the configuration from the
-    json file under /conf and saves
-    it under utils.CONF
+    Initialize configuration from the config_manager singleton.
+    This is kept for backward compatibility.
 
     :returns: None
     :rtype: None
-
     """
-
     global CONF
-
-    pth = path.dirname(path.abspath(__file__))
-    pth = path.split(pth)[0]
-
-    fpth = path.join(pth, 'conf/config.json')
-    with open(fpth) as f:
-        CONF = json.load(f)
+    # CONF is already initialized at the module level
 
 
 def get_logger(name):
@@ -44,7 +36,6 @@ def get_logger(name):
     :param name: The name of the logger
     :returns: The requested logger
     :rtype: logging.getLogger instance
-
     """
     logging.basicConfig(level=logging.ERROR)
     log = logging.getLogger(name)
@@ -59,7 +50,6 @@ def set_verbose(log):
     :param log: logging.getLogger instance
     :returns: None
     :rtype: None
-
     """
     log.setLevel(logging.INFO)
 
@@ -69,5 +59,8 @@ def set_verbose(log):
 #
 init_config()
 LOG = get_logger('VacuumCleanerSim')
-if CONF['logging']['verbose']:
+
+# Get debug config from config_manager
+debug_config = config_manager.get_debug_config()
+if debug_config.get('verbose', False):
     set_verbose(LOG)

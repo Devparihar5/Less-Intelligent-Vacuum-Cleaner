@@ -1,3 +1,5 @@
 Pygame
 Geometry
 numpy
+Flask
+Flask-SocketIO

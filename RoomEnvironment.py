@@ -184,4 +184,5 @@ class RoomEnvironment:
         return events
 
     def initialize_default_robot(self, robot):
-        self.robot = Robot(robot[0], robot[1], robot[2])
+        if robot and len(robot) >= 3:
+            self.robot = Robot(robot[0], robot[1], robot[2])
