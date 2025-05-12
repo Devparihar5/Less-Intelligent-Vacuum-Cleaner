@@ -13,7 +13,7 @@ from sprite.Tile import TileState
 from utils.Runmode import Runmode
 from utils.colorUtils import *
 from utils.confUtils import LOG as log
-from utils.confUtils import CONF as conf
+from utils.config_manager import config_manager
 
 
 class Visualizer:
@@ -74,15 +74,14 @@ class Visualizer:
             self.handle_pygame_events(pygame_events)
 
         if self.run_mode == Runmode.SIM:
-            ticks_per_screenshot = conf["simulation"].get("ticks_per_screenshot", 1000)
-            if self.ticks % ticks_per_screenshot == 0:
-                self.save_screenshot()
-
-            ticks_per_save= conf["simulation"].get("ticks_per_save", 500)
+            # Get simulation config from config manager
+            sim_config = config_manager.get_simulation_config()
+            
+            ticks_per_save = sim_config.get("ticks_per_save", 500)
             if self.ticks % ticks_per_save == 0:
                 self.save_stats()
 
-            if self.get_full_coverage_percentage() >= conf["simulation"].get("stop_at_coverage", 90):
+            if self.get_full_coverage_percentage() >= sim_config.get("stop_at_coverage", 90):
                 self.exit()
 
             self.ticks = self.ticks + 1
@@ -94,7 +93,9 @@ class Visualizer:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r and self.robot is None:
                     x, y = pygame.mouse.get_pos()
-                    radius = conf["robot"]["radius"]
+                    # Get robot config from config manager
+                    robot_config = config_manager.get_robot_config()
+                    radius = robot_config["radius"]
                     self.temp_robot = (x, y, radius)
                 if event.key == pygame.K_p:
                     self.show_coverage_path = not self.show_coverage_path
@@ -157,12 +158,18 @@ class Visualizer:
         self.tile_count = count
 
     def draw_fps(self):
-        if conf["debug"]["draw_fps"]:
+        # Get debug config from config manager
+        debug_config = config_manager.get_debug_config()
+        
+        if debug_config["draw_fps"]:
             fps = self.font.render("FPS: " + str(int(self.clock.get_fps())), True, RED)
             self.screen.blit(fps, (20, 20))
 
     def draw_coverage(self):
-        if conf["debug"]["draw_coverage"]:
+        # Get debug config from config manager
+        debug_config = config_manager.get_debug_config()
+        
+        if debug_config["draw_coverage"]:
             coverage_percentage = self.get_coverage_percentage()
             coverage_text = self.font.render("Tile-Coverage: " + str(int(coverage_percentage)) + "%", True, RED)
             self.screen.blit(coverage_text, (20, 40))
@@ -171,19 +178,25 @@ class Visualizer:
             full_coverage_text = self.font.render("Full Tile-Coverage: " + str(int(full_coverage_percentage)) + "%", True, RED)
             self.screen.blit(full_coverage_text, (20, 60))
 
+    def draw_time(self):
+        # Get debug config from config manager
+        debug_config = config_manager.get_debug_config()
+        
+        if debug_config["draw_time"] and self.run_mode == Runmode.SIM:
+            time_text = self.font.render("Time: " + str(self.ticks), True, RED)
+            self.screen.blit(time_text, (20, 80))
     def get_full_coverage_percentage(self):
         return self.full_covered_tiles / self.tile_count * 100 if self.tile_count > 0 else 0
 
     def get_coverage_percentage(self):
         return self.covered_tiles / self.tile_count * 100 if self.tile_count > 0 else 0
 
-    def draw_time(self):
-        if conf["debug"]["draw_time"] and self.run_mode == Runmode.SIM:
-            time = self.font.render("Time: " + str(self.ticks), True, RED)
-            self.screen.blit(time, (20, 80))
-
     def draw(self):
-        dirt = conf["simulation"].get("dirt", 35)
+        # Get simulation config from config manager
+        sim_config = config_manager.get_simulation_config()
+        
+        # Set background color based on dirt level
+        dirt = sim_config.get("dirt", 35)
         base_color = [255 - dirt, 255 - dirt, 255 - dirt]
         self.screen.fill(base_color)
 
@@ -205,29 +218,12 @@ class Visualizer:
 
         pygame.display.flip()
 
-    def save_screenshot(self):
-        if not os.path.exists("output"):
-            os.makedirs("output")
-
-        if not os.path.exists("output/" + str(self.time)):
-            os.makedirs("output/" + str(self.time))
-
-        filename = "output/" + str(self.time) + "/" + str(self.ticks) + ".png"
-        pygame.image.save(self.screen, filename)
-
     def save_stats(self):
         self.stats.append([self.ticks, self.get_coverage_percentage(), self.get_full_coverage_percentage()])
 
-    def export_stats(self):
-        filename = "output/" + str(self.time) + "/results.csv"
-        with open(filename, 'w') as file:
-            wr = csv.writer(file, quoting=csv.QUOTE_NONNUMERIC)
-            wr.writerows(self.stats)
 
     def exit(self):
         if self.run_mode == Runmode.SIM:
-            self.save_screenshot()
             self.save_stats()
-            self.export_stats()
             log.info("stop simulation")
         sys.exit()
